@@ -1,6 +1,5 @@
 #include <iocslib.h>
 
-   const int MAX_STRING_LENGTH = 5;
    unsigned char *test[15][8] ={{ "未定義",    "ESC",      "1",      "2",      "3",      "4",      "5",      "6"},
                                 {      "7",      "8",      "9",      "0",      "-",      "^",     "\\",     "BS"},
                                 {    "TAB",      "Q",      "W",      "E",      "R",      "T",      "Y",      "U"},
@@ -51,35 +50,48 @@
 
 void main()
 {
-	int y,dummy;
+	
 	B_CLR_AL();
-	dummy = B_PUTMES ( 7, 60,  4, 127, (unsigned char *)"ﾅﾝﾁｬｯﾃ KEYBOARD CHECKER");
-	dummy = B_PUTMES ( 7, 60,  5, 127, (unsigned char *)"2025 Gyrowave.");
+	B_PUTMES ( 7, 60,  4, 127, (unsigned char *)"ﾅﾝﾁｬｯﾃ KEYBOARD CHECKER");
+	B_PUTMES ( 7, 60,  5, 127, (unsigned char *)"2025 Gyrowave.");
 	do
-	{
+	{   /* 全キーグループについてグループごとに処理 */
+		int y;
 		for( y=0; y < 15; y++)
 		{
-			dummy = putmatrix( y);
-			dummy = getmatrix( y);
+			putmatrix( y);
+			getmatrix( y);
 		}
-	} while ( pushing[14][1] * pushing[5][4] == 0);
+	} while ( pushing[14][1] * pushing[5][4] == 0);  /* [CTRL] + [C] to abort. */
 
 	B_CLR_AL();
-	dummy = B_COLOR( 3);
+	B_COLOR( 3);
+	
+    /* TODO:
+	   ・pointer type mismatchていう警告はどうすれば消えるのか
+	   ・どうやったらプログラム終了後に文字がゴチャゴチャ出るのを防げるか
+	   ・どうやったら[COPY]キーを押しても白窓が開かなくできるか
+	*/
 }
 
+
 int putmatrix(int y)
-{
-	int x, dummy;
+{   /* キーグループごとの押下状況を出力 */
+    const int MAX_STRING_LENGTH = 7;
+	int x;
 	for (x = 0; x < 8; x++)
 	{
-		dummy = B_PUTMES ( 5 + pushed[y][x] + pushing[y][x], x * 7, y * 2, MAX_STRING_LENGTH, test[y][x]);
+		 B_PUTMES ( 5 + pushed[y][x] + pushing[y][x], 
+			        x * MAX_STRING_LENGTH, 
+			        y * 2, 
+			        MAX_STRING_LENGTH, 
+			        test[y][x]);
 	}
 	return 0;
 }
 
 int getmatrix(int y)
-{
+{   /* キーグループごとの押下状況を入力 */
 	int x, key_code;
 	key_code = BITSNS ( y);
 	
