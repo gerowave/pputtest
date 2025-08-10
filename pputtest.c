@@ -1,6 +1,6 @@
 #include <iocslib.h>
 
-   unsigned char *test[15][8] ={{ "未定義",    "ESC",      "1",      "2",      "3",      "4",      "5",      "6"},
+    char *test[15][8] ={{ "未定義",    "ESC",      "1",      "2",      "3",      "4",      "5",      "6"},
                                 {      "7",      "8",      "9",      "0",      "-",      "^",     "\\",     "BS"},
                                 {    "TAB",      "Q",      "W",      "E",      "R",      "T",      "Y",      "U"},
                                 {      "I",      "O",      "P",      "@",      "[",     "CR",      "A",      "S"},
@@ -50,10 +50,12 @@
 
 void main()
 {
-	
+	OS_CUROF();
 	B_CLR_AL();
+	
 	B_PUTMES ( 7, 60,  4, 127, (unsigned char *)"ﾅﾝﾁｬｯﾃ KEYBOARD CHECKER");
 	B_PUTMES ( 7, 60,  5, 127, (unsigned char *)"2025 Gyrowave.");
+	
 	do
 	{   /* 全キーグループについてグループごとに処理 */
 		int y;
@@ -67,11 +69,18 @@ void main()
 	B_CLR_AL();
 	B_COLOR( 3);
 	
-    /* TODO:
-	   ・pointer type mismatchていう警告はどうすれば消えるのか
-	   ・どうやったらプログラム終了後に文字がゴチャゴチャ出るのを防げるか
+	do
+	{   /* プログラム終了後に文字がゴチャゴチャ出るのを防ぐ */
+		B_KEYINP();
+	
+	} while ( B_KEYSNS() != 0);
+    
+	OS_CURON();
+
+	/* TODO:
 	   ・どうやったら[COPY]キーを押しても白窓が開かなくできるか
 	*/
+
 }
 
 
@@ -85,7 +94,7 @@ int putmatrix(int y)
 			        x * MAX_STRING_LENGTH, 
 			        y * 2, 
 			        MAX_STRING_LENGTH, 
-			        test[y][x]);
+		 			(unsigned char *)test[y][x]);
 	}
 	return 0;
 }
