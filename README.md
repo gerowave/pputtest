@@ -1,4 +1,3 @@
 # pputtest
 X68000 Nanchatte Keyboard Checker
-// [CTRL]+[C] to abort.
-// 誰かもっとちゃんとしたプログラムに改良してください。
+// X68000 C COMPILER PRO-68K ver2.0 Cライブラリマニュアル VOL.2のP61
